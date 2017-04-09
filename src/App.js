@@ -3,9 +3,28 @@ import React, { Component } from 'react';
 // import './App.css';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
+
+  constructor(){
+    super();
+    this.state = {lista : []};
+  }
+
+  componentDidMount(){
+    console.log("didMount");
+    $.ajax({
+      url: 'http://cdc-react.herokuapp.com/api/autores',
+      dataType: 'json',
+      success: function(resposta){
+        console.log("chegou resposta");
+        this.setState({lista:resposta});
+      }.bind(this)
+    });
+  }
   render() {
+    console.log('render');
     return (
       <div id="layout">
     
@@ -63,10 +82,16 @@ class App extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>Danilo</td>                
-                      <td>vitoriano08@gmail.com</td>                
-                    </tr>
+                    {
+                      this.state.lista.map(function(autor){
+                        return (
+                          <tr key={autor.id}>
+                            <td>{autor.nome}</td>
+                            <td>{autor.email}</td>
+                          </tr>
+                        );
+                      })
+                    }
                   </tbody>
                 </table> 
               </div>             
